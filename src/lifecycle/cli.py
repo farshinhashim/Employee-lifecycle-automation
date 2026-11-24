@@ -18,7 +18,9 @@ def build_parser():
     onboard.add_argument("--password", required=True)
     offboard = sub.add_parser("offboard", help="Revoke a departing employee's access")
     offboard.add_argument("--email", required=True)
-    offboard.add_argument("--confirm", action="store_true", help="Confirm destructive real-mode actions")
+    offboard.add_argument(
+        "--confirm", action="store_true", help="Confirm destructive real-mode actions"
+    )
     return parser
 
 
@@ -33,17 +35,26 @@ def main(argv=None):
         settings.validate_real()
         if settings.mode not in {"mock", "real"}:
             raise ValueError("INTEGRATION_MODE must be 'mock' or 'real'")
-        if args.command == "offboard" and settings.mode == "real" and not settings.dry_run:
+        if (
+            args.command == "offboard"
+            and settings.mode == "real"
+            and not settings.dry_run
+        ):
             if not args.confirm:
                 raise ValueError("Real offboarding requires --confirm")
             if not sys.stdin.isatty():
-                raise ValueError("Real offboarding requires an interactive terminal for target confirmation")
+                raise ValueError(
+                    "Real offboarding requires an interactive terminal "
+                    "for target confirmation"
+                )
             typed = input(f"Type the exact departing email '{args.email}' to proceed: ")
             if typed != args.email:
                 raise ValueError("Confirmation did not match; aborting")
         workflow = LifecycleWorkflow(settings)
         if args.command == "onboard":
-            result = workflow.onboard(args.first_name, args.last_name, args.email, args.password)
+            result = workflow.onboard(
+                args.first_name, args.last_name, args.email, args.password
+            )
         else:
             result = workflow.offboard(args.email)
         print(json.dumps(result, indent=2))

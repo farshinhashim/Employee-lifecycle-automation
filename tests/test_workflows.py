@@ -53,17 +53,22 @@ def test_onboarding_runs_all_major_steps():
     okta, google = FakeOkta(), FakeGoogle()
     op = OnePasswordMock(real_settings())
     workflow = LifecycleWorkflow(
-        real_settings(), okta=okta, google=google, onepassword=op,
-        mdm=MDMClient("jamf"), notifier=FakeNotifier()
+        real_settings(),
+        okta=okta,
+        google=google,
+        onepassword=op,
+        mdm=MDMClient("jamf"),
+        notifier=FakeNotifier(),
     )
     result = workflow.onboard("Alex", "Rivera", "alex@example.com", "Temp-Pass-123!")
     assert result["status"] == "completed"
     assert okta.created == ["alex@example.com"]
     assert google.created == ["alex@example.com"]
     assert "engineering" in op.memberships["alex@example.com"]
-    assert any(a.action == "send_enrollment_invitation" for a in [
-        SimpleNamespace(**item) for item in result["actions"]
-    ])
+    assert any(
+        a.action == "send_enrollment_invitation"
+        for a in [SimpleNamespace(**item) for item in result["actions"]]
+    )
 
 
 def test_offboarding_deactivates_revokes_and_notifies():
@@ -71,8 +76,7 @@ def test_offboarding_deactivates_revokes_and_notifies():
     op = OnePasswordMock(real_settings())
     op.memberships["leaver@example.com"] = {"engineering", "shared"}
     workflow = LifecycleWorkflow(
-        real_settings(), okta=okta, google=google, onepassword=op,
-        notifier=notifier
+        real_settings(), okta=okta, google=google, onepassword=op, notifier=notifier
     )
     result = workflow.offboard("leaver@example.com")
     assert result["status"] == "completed"
@@ -112,9 +116,14 @@ def test_slack_failure_is_recorded_without_aborting_offboarding():
             raise RuntimeError("webhook unavailable")
 
     workflow = LifecycleWorkflow(
-        real_settings(), okta=FakeOkta(), google=FakeGoogle(),
-        onepassword=OnePasswordMock(real_settings()), notifier=BrokenNotifier()
+        real_settings(),
+        okta=FakeOkta(),
+        google=FakeGoogle(),
+        onepassword=OnePasswordMock(real_settings()),
+        notifier=BrokenNotifier(),
     )
     result = workflow.offboard("leaver@example.com")
     assert result["status"] == "completed_with_errors"
-    assert any(item["system"] == "slack" and not item["success"] for item in result["actions"])
+    assert any(
+        item["system"] == "slack" and not item["success"] for item in result["actions"]
+    )

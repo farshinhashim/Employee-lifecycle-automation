@@ -24,7 +24,9 @@ class Settings:
     onepassword_group: str = os.getenv("ONEPASSWORD_NEW_HIRE_GROUP", "engineering")
     onepassword_vault_ids: tuple = tuple(
         item.strip()
-        for item in os.getenv("ONEPASSWORD_SHARED_VAULT_IDS", "engineering,shared").split(",")
+        for item in os.getenv(
+            "ONEPASSWORD_SHARED_VAULT_IDS", "engineering,shared"
+        ).split(",")
         if item.strip()
     )
     slack_webhook_url: str = os.getenv("SLACK_WEBHOOK_URL", "")

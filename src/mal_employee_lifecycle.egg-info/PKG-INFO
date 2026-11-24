@@ -1,0 +1,15 @@
+Metadata-Version: 2.4
+Name: mal-employee-lifecycle
+Version: 1.0.0
+Summary: Secure employee onboarding and offboarding workflow automation
+Requires-Python: >=3.10
+License-File: LICENSE
+Requires-Dist: requests<3,>=2.31
+Requires-Dist: python-dotenv<2,>=1.0
+Provides-Extra: google
+Requires-Dist: google-api-python-client>=2.120; extra == "google"
+Requires-Dist: google-auth>=2.28; extra == "google"
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"
+Requires-Dist: ruff>=0.5; extra == "dev"
+Dynamic: license-file

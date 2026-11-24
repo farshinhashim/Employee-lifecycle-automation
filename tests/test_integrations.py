@@ -1,5 +1,3 @@
-from types import SimpleNamespace
-
 import pytest
 
 from lifecycle.config import Settings
@@ -39,10 +37,12 @@ def test_okta_create_user_posts_profile_and_returns_id():
 
 
 def test_okta_group_assignment_resolves_group_then_puts_membership():
-    session = FakeSession([
-        [{"id": "group-1", "profile": {"name": "engineering"}}],
-        {},
-    ])
+    session = FakeSession(
+        [
+            [{"id": "group-1", "profile": {"name": "engineering"}}],
+            {},
+        ]
+    )
     settings = Settings(okta_org_url="https://tenant.okta.com", okta_api_token="secret")
     client = OktaClient(settings, session=session)
     assert client.assign_group("user-1", "engineering") == "group-1"
@@ -51,10 +51,12 @@ def test_okta_group_assignment_resolves_group_then_puts_membership():
 
 
 def test_okta_deactivate_user_looks_up_then_deactivates():
-    session = FakeSession([
-        [{"id": "user-1", "profile": {"email": "leaver@example.com"}}],
-        {},
-    ])
+    session = FakeSession(
+        [
+            [{"id": "user-1", "profile": {"email": "leaver@example.com"}}],
+            {},
+        ]
+    )
     settings = Settings(okta_org_url="https://tenant.okta.com", okta_api_token="secret")
     client = OktaClient(settings, session=session)
     assert client.deactivate_user("leaver@example.com") == "user-1"
@@ -82,7 +84,9 @@ def test_google_workspace_revokes_each_listed_oauth_token():
 
         def list(self, userKey):
             assert userKey == "leaver@example.com"
-            return Request({"items": [{"clientId": "client-a"}, {"clientId": "client-b"}]})
+            return Request(
+                {"items": [{"clientId": "client-a"}, {"clientId": "client-b"}]}
+            )
 
         def delete(self, userKey, clientId):
             self.deleted.append((userKey, clientId))
@@ -121,4 +125,7 @@ def test_google_workspace_create_user_uses_password_change_policy():
 
     client = GoogleWorkspaceClient(Settings(google_org_unit_path="/Staff"))
     client.service = Service()
-    assert client.create_user("Alex", "Rivera", "alex@example.com", "Temp123!") == "google-1"
+    assert (
+        client.create_user("Alex", "Rivera", "alex@example.com", "Temp123!")
+        == "google-1"
+    )

@@ -1,0 +1,10 @@
+requests<3,>=2.31
+python-dotenv<2,>=1.0
+
+[dev]
+pytest>=8
+ruff>=0.5
+
+[google]
+google-api-python-client>=2.120
+google-auth>=2.28

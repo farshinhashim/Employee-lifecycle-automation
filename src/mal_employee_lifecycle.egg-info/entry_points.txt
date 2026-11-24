@@ -1,0 +1,2 @@
+[console_scripts]
+mal-lifecycle = lifecycle.cli:main
