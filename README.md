@@ -1,4 +1,4 @@
-# Mal employee lifecycle automation
+# Employee lifecycle automation
 
 A Python reference implementation that coordinates security-relevant onboarding
 and offboarding actions across Okta, Google Workspace, 1Password group/vault
