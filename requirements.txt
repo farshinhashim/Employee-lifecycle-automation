@@ -1,0 +1,7 @@
+requests>=2.31,<3
+python-dotenv>=1.0,<2
+pytest>=8
+ruff>=0.5
+# Optional real Google Workspace integration:
+# google-api-python-client>=2.120
+# google-auth>=2.28
